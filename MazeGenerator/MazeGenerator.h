@@ -1,17 +1,21 @@
 #pragma once
 
 #include <vector>
-
 #include <set>
 #include <algorithm>
 
 #include "Utils.h"
 
+#include "EasyX.h"
+
 
 
 //迷宫生成器
-class MageGenerator
-{
+class MazeGenerator
+{   
+public:
+    const int kWall = 0;
+    const int kRoad = 1;
     struct Cell
     {
         Cell(int x, int y)
@@ -22,87 +26,29 @@ class MageGenerator
         int x;
         int y;
     };
-    const int kWall = 0;
-    const int kRoad = 1;
-public:
 
-    void InitMaze(int height, int width, int win_Height, int win_Width)
+    MazeGenerator() 
     {
-        height_ = height;
-        width_ = width;
-
-        map_.resize(height, std::vector<int>(width, kWall));
-        visited_.resize(height, std::vector<bool>(width, false));
-
-        cellHeightSize_ = win_Height / height_;
-        cellWidthSize_ = win_Width / width_;
     }
 
-    //随机化深搜
-    void Dfs_Generate()
-    {  
-        for(int i = 0; i < height_; i++)
-        {
-            for(int j = 0; j < width_; j++)
-            {
-                if(i % 2 == 1 && j % 2 == 1)
-                {
-                    map_[i][j] = kRoad;
-                }
-            }
-        }
+    virtual void InitMaze(int row, int col, int win_Height, int win_Width)
+    {
+        row_ = row;
+        col_ = col;
+        cellHeightSize_ = win_Height / row_;
+        cellWidthSize_ = win_Width / col_;
 
-        DisplayMap();
-        dfs(1, 1);
+        map_.resize(row_, std::vector<int>(col_, kWall));
+        visited_.resize(row_, std::vector<bool>(col_, false));
     }
+
+    virtual void Generate(){};
 
     //Prim生成
     void Prim_Generate()
     {
         Prim();
-    }
-
-    //法1: 随机化深搜
-    void dfs(int i, int j)
-    {
-        if(!IsInRange(i,j) || IsVisited(i, j))
-            return;
-
-        SetVisited(i, j);
-
-        std::vector<Cell> diff = {
-            {-2, 0},
-            {2, 0},
-            {0, -2},
-            {0, 2},
-        };
-
-        int SwapIndex = (int)diff.size() - 1;
-
-        while(SwapIndex >= 0)
-        {
-            int index = Utils::GetRandomRange(0, SwapIndex);
-            int dx = diff[index].x;
-            int dy = diff[index].y;
-
-            int nextRoadX = i + dx;
-            int nextRoadY = j + dy;
-
-            if(IsInRange(nextRoadX, nextRoadY) && !IsVisited(nextRoadX, nextRoadY))
-            {
-                int wallx = (i + nextRoadX) / 2;
-                int wally = (j + nextRoadY) / 2;
-
-                SetMap(wallx, wally, kRoad);
-                SetVisited(wallx, wally);
-                dfs(nextRoadX, nextRoadY);
-            }
-
-            //每次随机选中的没访问过的道路放到后部
-            std::swap(diff[SwapIndex], diff[index]);
-            SwapIndex--;
-        }
-    }
+    } 
 
     //法2: Prim算法
     void Prim()
@@ -203,16 +149,16 @@ public:
     //坐标在范围之内
     bool IsInRange(int i, int j)
     {
-        if(i <= 0 || j <= 0 || i >= height_ || j >= width_)
+        if(i <= 0 || j <= 0 || i >= row_ || j >= col_)
             return false;
         return true;
     }
 
     void DisplayMap()
     {
-        for(int i = 0; i < height_; i++)
+        for(int i = 0; i < row_; i++)
         {
-            for(int j = 0; j < width_; j++)
+            for(int j = 0; j < col_; j++)
             {
                 UpdateCellColor(i,j);
             }
@@ -240,8 +186,8 @@ public:
 
     std::vector<std::vector<int>> map_;
     std::vector<std::vector<bool>> visited_;
-    int height_;
-    int width_;
+    int row_;
+    int col_;
 
     int cellHeightSize_;
     int cellWidthSize_;
