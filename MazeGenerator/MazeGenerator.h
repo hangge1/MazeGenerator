@@ -56,7 +56,7 @@ public:
         }
         else
         {
-            SetCellColor(i, j, BLACK);
+            //SetCellColor(i, j, BLACK);
         }
     }
 
