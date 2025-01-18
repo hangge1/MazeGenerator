@@ -7,15 +7,21 @@
 
 #include "Utils.h"
 
-struct Cell
-{
-    int x;
-    int y;
-};
+
 
 //迷宫生成器
 class MageGenerator
 {
+    struct Cell
+    {
+        Cell(int x, int y)
+        {
+            this->x = x;
+            this->y = y;
+        }
+        int x;
+        int y;
+    };
     const int kWall = 0;
     const int kRoad = 1;
 public:
@@ -64,7 +70,7 @@ public:
 
         SetVisited(i, j);
 
-        std::vector<std::pair<int,int>> diff = {
+        std::vector<Cell> diff = {
             {-2, 0},
             {2, 0},
             {0, -2},
@@ -76,8 +82,8 @@ public:
         while(SwapIndex >= 0)
         {
             int index = Utils::GetRandomRange(0, SwapIndex);
-            int dx = diff[index].first;
-            int dy = diff[index].second;
+            int dx = diff[index].x;
+            int dy = diff[index].y;
 
             int nextRoadX = i + dx;
             int nextRoadY = j + dy;
@@ -104,8 +110,8 @@ public:
         std::set<std::pair<int,int>> TodoRoadPointSets; //待处理路点集合
 
         //1 起点的四周路点加入待处理路点集合
-        for(std::pair<int,int> p : GetNextNeighbors(1, 1))
-            TodoRoadPointSets.insert({p.first, p.second});
+        for(Cell p : GetNextNeighbors(1, 1))
+            TodoRoadPointSets.insert({ p.x, p.y });
         SetMap(1, 1, kRoad); //起点变成路
 
         while(!TodoRoadPointSets.empty())
@@ -118,7 +124,7 @@ public:
             TodoRoadPointSets.erase(it);
             
             //3 获取路点的四周邻居
-            std::vector<std::pair<int,int>> Neighbors = GetNextNeighbors(cellX, cellY);
+            std::vector<Cell> Neighbors = GetNextNeighbors(cellX, cellY);
             bool isFirstBreakWall = false; //只允许一次打破一个墙
             while(!Neighbors.empty())
             {
@@ -167,11 +173,11 @@ public:
     }
 
     //获取直接的4个邻居
-    std::vector<std::pair<int,int>> GetNeighbors(int x, int y)
+    std::vector<Cell> GetNeighbors(int x, int y)
     {
         if(!IsInRange(x,y)) return {};
 
-        std::vector<std::pair<int,int>> result;
+        std::vector<Cell> result;
         if(IsInRange(x - 1, y)) result.emplace_back(x - 1, y);
         if(IsInRange(x + 1, y)) result.emplace_back(x + 1, y);
         if(IsInRange(x, y - 1)) result.emplace_back(x, y - 1);
@@ -181,11 +187,11 @@ public:
     }
 
     //获取间隔一个的4个邻居
-    std::vector<std::pair<int,int>> GetNextNeighbors(int x, int y)
+    std::vector<Cell> GetNextNeighbors(int x, int y)
     {
         if(!IsInRange(x,y)) return {};
 
-        std::vector<std::pair<int,int>> result;
+        std::vector<Cell> result;
         if(IsInRange(x - 2, y)) result.emplace_back(x - 2, y);
         if(IsInRange(x + 2, y)) result.emplace_back(x + 2, y);
         if(IsInRange(x, y - 2)) result.emplace_back(x, y - 2);
