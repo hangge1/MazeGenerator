@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="EasyX.h" />
     <ClInclude Include="MageGenerator.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

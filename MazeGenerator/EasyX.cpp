@@ -1,8 +1,8 @@
 #include "EasyX.h"
 
-EasyX::EasyX(int w, int h)
+EasyX::EasyX()
 {
-    InitGraph(w, h);
+
 }
 
 EasyX::~EasyX()
@@ -18,4 +18,12 @@ void EasyX::InitGraph(int w, int h)
 void EasyX::CloseGraph()
 {
     closegraph();   // 关闭绘图窗口
+}
+
+void EasyX::UpdateCellColor(int left, int up, int right, int bottom, 
+    int color)
+{
+    //setlinecolor(color);
+    setfillcolor(color);
+    fillrectangle(left, up, right, bottom);
 }

@@ -12,7 +12,8 @@ const int MazeCol = 21;
 
 int main()
 {
-    EasyX easyX(Window_Height, Window_Width);
+    EasyX& easyX = EasyX::Get();
+    easyX.InitGraph(Window_Height, Window_Width);
 
     MageGenerator gen;
     gen.InitMaze(MazeRow, MazeCol, Window_Height, Window_Width);

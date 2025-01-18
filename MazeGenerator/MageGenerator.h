@@ -1,9 +1,11 @@
 #pragma once
 
 #include <vector>
-#include <random>
+
 #include <set>
 #include <algorithm>
+
+#include "Utils.h"
 
 struct Cell
 {
@@ -44,7 +46,7 @@ public:
             }
         }
 
-        PrintMap();
+        DisplayMap();
         dfs(1, 1);
     }
 
@@ -73,7 +75,7 @@ public:
 
         while(SwapIndex >= 0)
         {
-            int index = GetRandomIndex(0, SwapIndex);
+            int index = Utils::GetRandomRange(0, SwapIndex);
             int dx = diff[index].first;
             int dy = diff[index].second;
 
@@ -109,7 +111,7 @@ public:
         while(!TodoRoadPointSets.empty())
         {
             //2 从待处理路点集合, 随机获取一个元素
-            int randomIndex = GetRandomIndex(0, TodoRoadPointSets.size() - 1);
+            int randomIndex = Utils::GetRandomRange(0, (int)TodoRoadPointSets.size() - 1);
             auto it = TodoRoadPointSets.begin();
             std::advance(it, randomIndex);
             auto [cellX, cellY] = *it;
@@ -121,7 +123,7 @@ public:
             while(!Neighbors.empty())
             {
                 //4 随机获取一个邻居
-                int randomNeighbor = GetRandomIndex(0, Neighbors.size() - 1);
+                int randomNeighbor = Utils::GetRandomRange(0, (int)Neighbors.size() - 1);
                 auto [nextX, nextY] = Neighbors[randomNeighbor];
                 Neighbors.erase(Neighbors.begin() + randomNeighbor);
 
@@ -150,23 +152,18 @@ public:
     {
         if(map_[i][j] == kRoad)
         {         
-            setlinecolor(BLACK);
-            setfillcolor(WHITE);
-            fillrectangle(i * cellWidthSize_, j * cellHeightSize_, (i+1) * cellWidthSize_, (j+1) * cellHeightSize_);
+            SetCellColor(i, j, WHITE);
         }
         else
         {
-            setlinecolor(BLACK);
-            setfillcolor(BLACK);
-            fillrectangle(i * cellWidthSize_, j * cellHeightSize_, (i+1) * cellWidthSize_, (j+1) * cellHeightSize_);
+            SetCellColor(i, j, BLACK);
         }
     }
 
     void SetCellColor(int i, int j, int Color)
     {
-        setlinecolor(Color);
-        setfillcolor(Color);
-        fillrectangle(i * cellWidthSize_, j * cellHeightSize_, (i+1) * cellWidthSize_, (j+1) * cellHeightSize_);
+        EasyX::Get().UpdateCellColor(i * cellWidthSize_, j * cellHeightSize_, 
+            (i+1) * cellWidthSize_, (j+1) * cellHeightSize_, Color);
     }
 
     //获取直接的4个邻居
@@ -197,17 +194,6 @@ public:
         return result;
     }
 
-    //返回随机数，范围是 [min,max]
-    int GetRandomIndex(int min, int max)
-    {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-
-        std::uniform_int_distribution<> dis(min, max);
-        int randomInt = dis(gen);
-        return randomInt;
-    }
-
     //坐标在范围之内
     bool IsInRange(int i, int j)
     {
@@ -216,7 +202,7 @@ public:
         return true;
     }
 
-    void PrintMap()
+    void DisplayMap()
     {
         for(int i = 0; i < height_; i++)
         {
