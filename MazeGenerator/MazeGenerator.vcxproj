@@ -132,11 +132,13 @@
     <ClCompile Include="DFS_MazeGenerator.cpp" />
     <ClCompile Include="EasyX.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Prim_MazeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DFS_MazeGenerator.h" />
     <ClInclude Include="EasyX.h" />
     <ClInclude Include="MazeGenerator.h" />
+    <ClInclude Include="Prim_MazeGenerator.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

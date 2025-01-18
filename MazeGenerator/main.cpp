@@ -2,6 +2,7 @@
 #include "EasyX.h"
 #include "MazeGenerator.h"
 #include "DFS_MazeGenerator.h"
+#include "Prim_MazeGenerator.h"
 
 const int Window_Height = 800;
 const int Window_Width = 800;
@@ -15,13 +16,17 @@ int main()
 {
     EasyX& easyX = EasyX::Get();
     easyX.InitGraph(Window_Height, Window_Width);
-
-    MazeGenerator* gen = new DFS_MazeGenerator();
-    gen->InitMaze(MazeRow, MazeCol, Window_Height, Window_Width);
+    
+    //Prim
+    MazeGenerator* gen = new Prim_MazeGenerator();
+    gen->InitMaze({MazeRow, MazeCol}, {Window_Height, Window_Width});
     gen->Generate();
 
-    //gen.DfsRunMaze();
-    //gen.Prim_Generate();
+    //DFS
+    /*MazeGenerator* gen = new DFS_MazeGenerator();
+    gen->InitMaze({MazeRow, MazeCol}, {Window_Height, Window_Width});
+    gen->Generate();*/
+
 
 	_getch();   // 按任意键继续
 	return 0;

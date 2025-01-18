@@ -5,17 +5,17 @@
 class DFS_MazeGenerator : public MazeGenerator
 {
 public:
-    virtual void InitMaze(int row, int col, int win_Height, int win_Width) override
+    virtual void InitMaze(IntVec2 MazeSize, IntVec2 WindowSize) override
     {
-        MazeGenerator::InitMaze(row, col, win_Height, win_Width);
+        MazeGenerator::InitMaze(MazeSize, WindowSize);
 
-        for(int i = 0; i < row_; i++)
+        for( int i = 0; i < MazeSize_.x; i++ )
         {
-            for(int j = 0; j < col_; j++)
+            for(int j = 0; j < MazeSize_.y; j++)
             {
                 if(i % 2 == 1 && j % 2 == 1)
                 {
-                    map_[i][j] = kRoad;
+                    map_[i][j] = CellType::Path;
                 }
             }
         }
@@ -36,7 +36,7 @@ private:
 
         SetVisited(i, j);
 
-        std::vector<Cell> diff = {
+        std::vector<IntVec2> diff = {
             {-2, 0},
             {2, 0},
             {0, -2},
@@ -59,7 +59,7 @@ private:
                 int wallx = (i + nextRoadX) / 2;
                 int wally = (j + nextRoadY) / 2;
 
-                SetMap(wallx, wally, kRoad);
+                SetMap(wallx, wally, CellType::Path);
                 SetVisited(wallx, wally);
                 dfs(nextRoadX, nextRoadY);
             }
